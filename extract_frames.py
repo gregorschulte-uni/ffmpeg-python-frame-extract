@@ -9,12 +9,11 @@ framecounter    = 0                      # number of frames in video
 frameshift      = 0                      # number of frames to skip at the beginning of a video
 
 temppath        = "empty"                # initialize temporary path string
-tempfile        = "empty"                # initialize temporary file string
 
 multiplier      = 0                      # initzalize multiplier, ie seconds * fps
 restframes      = 0                      # initialize frames left in video
 
-seconds         = 40                     # set interval in seconds
+seconds         = 10                     # set interval in seconds
 
 for file in glob('**/*.mp4'):
    
@@ -25,32 +24,26 @@ for file in glob('**/*.mp4'):
     frames          = vidcap.get(cv2.CAP_PROP_FRAME_COUNT)          # Gets the number of frames in the current video
     multiplier      = round(fps * seconds)                          # nth frame to write   
     
-    
-    if os.path.dirname(file) == temppath: 
-        print ("altes  Verzeichis")
-        if os.path.abspath(file) == tempfile:
-            print("same File")
-
-        else:
-            print("new File")
-            frameshift =  multiplier - restframes
+            
+    if os.path.dirname(file) == temppath:                           # Test: is it still the same path?
+        print ("same folder as before")
         
     else:
-            print("neues Verzeichnis")
-            frameshift      = 0
-            framecounter    = 0
-            restframes      = 0
+        print("different folder, resetting counter variables")
+        frameshift      = 0
+        framecounter    = 0
+        restframes      = 0
     
     
     
     print("\n##################################",
           "\nFilename:\t\t\t", os.path.abspath(file),
-          "\nFrames in current video:\t",frames,         # print current video file information
+          "\nFrames in current video:\t",round(frames),         # print current video file information
           "\nFPS:\t\t\t\t", fps, 
           "\nInterval:\t\t\t", seconds,"s" , 
           "\nMultiplier:\t\t\t", multiplier ,
-          "\nFrames left from last video:\t",restframes,
-          "\nFrames to skip:\t\t\t", frameshift,
+          "\nFrames left from last video:\t",round(restframes),
+          "\nFrames to skip:\t\t\t", round(frameshift),
           "\n########################################\n")
 
     
@@ -68,10 +61,10 @@ for file in glob('**/*.mp4'):
             
 
 
-    restframes = (frames - frameshift) % multiplier     # calculate frames left in video     
+    restframes = (frames - frameshift) % multiplier     # calculate frames left in video   
+    frameshift =  multiplier - restframes
  
     temppath = os.path.dirname(file)                    # fill temporary path variable
-    tempfile = os.path.abspath(file)                    # fill temporary filename variable
     
     vidcap.release()
     
