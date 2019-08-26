@@ -1,9 +1,11 @@
 import cv2
 import os
+import easygui
 from glob import glob
 
+path = easygui.diropenbox()
 
-os.chdir('C:\\test\\')                   # Manually setting working directory, add open folder dialog later
+os.chdir('C:\\test\\')          # Manually setting working directory, add open folder dialog later
 
 seconds         = 10                     # set interval in seconds
 
