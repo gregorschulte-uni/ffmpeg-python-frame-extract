@@ -10,11 +10,17 @@ framecounter = 0
 frameshift = 0
 
 temppath = "empty"
+tempfile = "empty"
 
 for file in glob('**/*.mp4'):
     
     if os.path.dirname(file) == temppath: 
         print ("altes  Verzeichis")
+        if os.path.abspath(file) == tempfile:
+            frameshift +=1
+            print("same File")
+        else:
+            print("new File")
 
         
     else:
@@ -24,13 +30,13 @@ for file in glob('**/*.mp4'):
     
     print("Current file: " , os.path.abspath(file))
     
-    #videoFile = file
+    
     
     vidcap = cv2.VideoCapture(file)
     
     success,image = vidcap.read()
     
-    seconds = 10
+    seconds = 25
     
     fps = vidcap.get(cv2.CAP_PROP_FPS) # Gets the frames per second
     
@@ -38,7 +44,14 @@ for file in glob('**/*.mp4'):
     
     multiplier = fps * seconds
     
-    print("Frames:\t\t",frames, "\nFPS:\t\t", fps, "\nInterval:\t", seconds,"s" , "\nMultiplier:\t", multiplier )
+    restframes = frames % multiplier
+    
+    
+    print("Frames:\t\t",frames, 
+          "\nFPS:\t\t", fps, 
+          "\nInterval:\t", seconds,"s" , 
+          "\nMultiplier:\t", multiplier , 
+          "\nFrames left:\t", restframes )
     
 
     
@@ -56,5 +69,8 @@ for file in glob('**/*.mp4'):
 
     print ("\n\n finished wrinting frames \n\n")
     temppath = os.path.dirname(file)
+    tempfile = os.path.abspath(file)
     vidcap.release()
+    
+    
 print ("Complete")
