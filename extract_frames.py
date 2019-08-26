@@ -42,7 +42,6 @@ for file in glob('**/*.mp4'):
     
 
     
-#################### Initiate Process ################
     print ("\n\n start writing frames \n\n ")
     while success:
         frameId = int(round(vidcap.get(1))) #current frame number, rounded b/c sometimes you get frame intervals which aren't integers...this adds a little imprecision but is likely good enough
