@@ -1,46 +1,32 @@
 import cv2
-from glob import glob
 import os
+from glob import glob
 
-os.chdir('C:\\test\\')
 
-print ("Current Working Dir: ", os.getcwd(), "\n\n")
+os.chdir('C:\\test\\')              # Manually setting working directory, add open folder dialog later
 
-framecounter = 0
-frameshift = 0
+framecounter    = 0                    # number of frames in video
+frameshift      = 0                    # number of frames to skip at the beginning of a video
 
-temppath = "empty"
-tempfile = "empty"
+temppath        = "empty"                  # initialize temporary path string
+tempfile        = "empty"                  # initialize temporary file string
 
-multiplier = 0
-restframes = 0
+multiplier      = 0                      # initzalize multiplier, ie seconds * fps
+restframes      = 0                      # initialize frames left in video
+
+seconds         = 40                     # set interval in seconds
 
 for file in glob('**/*.mp4'):
     
     
-    print("Current file: " , os.path.abspath(file))
+    print("Current file: " , os.path.abspath(file))    
     
+    vidcap          = cv2.VideoCapture(file)
+    success,image   = vidcap.read()
     
-    
-    vidcap = cv2.VideoCapture(file)
-    
-    success,image = vidcap.read()
-    
-    seconds = 40
-    
-    fps = vidcap.get(cv2.CAP_PROP_FPS) # Gets the frames per second
-    
-    frames = vidcap.get(cv2.CAP_PROP_FRAME_COUNT)
-    
-    multiplier = fps * seconds
-    
-    
-    print("Frames:\t\t",frames, 
-          "\nFPS:\t\t", fps, 
-          "\nInterval:\t", seconds,"s" , 
-          "\nMultiplier:\t", multiplier , 
-          "\nFrames left:\t", restframes )
-    
+    fps             = vidcap.get(cv2.CAP_PROP_FPS)                  # Gets the framerate of the current video
+    frames          = vidcap.get(cv2.CAP_PROP_FRAME_COUNT)       # Gets the number of frames in the current video
+    multiplier      = fps * seconds                          # nth frame to write   
     
     
     if os.path.dirname(file) == temppath: 
@@ -52,9 +38,18 @@ for file in glob('**/*.mp4'):
             frameshift = frameshift + restframes
         
     else:
-            frameshift = 0
             print("neues Verzeichnis")
+            frameshift = 0
             framecounter = 0
+    
+    
+    
+    print("Frames in current video:\t\t",frames,         # print current video file information
+          "\nFPS:\t\t", fps, 
+          "\nInterval:\t", seconds,"s" , 
+          "\nMultiplier:\t", multiplier ,
+          "\nFrames left from last video:\t",restframes,
+          "\nFrames to skip:\t", frameshift )
 
     
 
