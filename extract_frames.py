@@ -1,9 +1,9 @@
 import cv2
 import os
-import easygui
+
 from glob import glob
 
-path = easygui.diropenbox()
+
 
 os.chdir('C:\\test\\')          # Manually setting working directory, add open folder dialog later
 
@@ -45,7 +45,7 @@ for file in glob('**/*.mp4'):
         
         success, image = vidcap.read()
     
-        if (position) % multiplier == 0:
+        if (position-1) % multiplier == 0:
             framecounter += 1
             filename = os.path.abspath(file).replace('.mp4','') +"_"+ str(frameId).zfill(8) + "_"+str(framecounter).zfill(8)+".jpg"
             print (filename)
