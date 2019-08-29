@@ -2,12 +2,13 @@ import cv2
 import os
 from glob import glob
 
+import multiprocessing
+
 os.chdir('C:\\test\\')          # Manually setting working directory, add open folder dialog later
 
-log = open("log.txt","w")
+#log = open("log.txt","w")
 
-for file in sorted(glob('**/*.mp4')):
-   
+def process(file):
     vidcap          = cv2.VideoCapture(file)
     success,image   = vidcap.read()
     fps             = vidcap.get(cv2.CAP_PROP_FPS)                  # Gets the framerate of the current video
@@ -16,10 +17,25 @@ for file in sorted(glob('**/*.mp4')):
     width           = vidcap.get(cv2.CAP_PROP_FRAME_WIDTH)
     
     logstring = str(os.path.basename(file)) + ";" + str(round(height)).zfill(4) + ";" + str(round(width)).zfill(4) + ";" + str(round(frames)).zfill(10) + ";" + str(fps).zfill(6) +"\r"
-    
-    print(logstring)    
-    log.write(logstring)
-    
     vidcap.release()
+    print(logstring)    
+#    log.write(logstring)
+    
 
-log.close()    
+p = multiprocessing.Pool()
+
+
+os.chdir('C:\\test\\')          # Manually setting working directory, add open folder dialog later
+
+log = open("log.txt","w")
+
+for file in sorted(glob('**/*.mp4')):
+    
+    p.apply_async(process, [file])
+   
+
+    
+
+p.close()
+p.join()
+#log.close()    
