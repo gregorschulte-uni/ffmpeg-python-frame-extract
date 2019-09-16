@@ -1,6 +1,6 @@
 import cv2
 import os
-
+import subprocess
 from glob import glob
 
 
@@ -15,10 +15,13 @@ multiplier      = 0                      # initzalize multiplier, ie seconds * f
 restframes      = 0                      # initialize frames left in video
 temppath        = "empty"                # initialize temporary path string
 
-for file in glob('**/*.mp4'):
-   
+for file in glob('**/*.MP4'):
+    print(subprocess.getoutput(['F:\\Downloads\\ffmpeg-20190812-9fdc7f1-win64-static\\bin\\ffmpeg.exe', '-i', file, '-an' , '-vcodec', 'copy', 'C:\\test\\muted.mp4']))
+
+    
     vidcap          = cv2.VideoCapture(file)
     success,image   = vidcap.read()
+    codec           = vidcap.get(cv2.CAP_PROP_FOURCC)
     fps             = vidcap.get(cv2.CAP_PROP_FPS)                  # Gets the framerate of the current video
     frames          = vidcap.get(cv2.CAP_PROP_FRAME_COUNT)          # Gets the number of frames in the current video
     multiplier      = round(fps * seconds)                          # nth frame to write   
@@ -37,17 +40,18 @@ for file in glob('**/*.mp4'):
           "\nmultiplier:\t\t\t", multiplier ,
           "\nframes left from last video:\t",round(restframes),
           "\nframes to skip:\t\t\t", round(frameshift),
+          "\ncodec: ", codec,
           "\n##################################################\n")
     
     while success:
         frameId = int(round(vidcap.get(1)))                         # get current frame number, rounded b/c sometimes you get frame intervals which aren't integers...this adds a little imprecision but is likely good enough
-        position = frameId + restframes                             # calculate position correct for time left in previous file 
+        position = round(frameId + restframes)                             # calculate position correct for time left in previous file 
         
-        success, image = vidcap.read()
-    
+        success,image = vidcap.read()
+        print(frameId)
         if (position-1) % multiplier == 0:
             framecounter += 1
-            filename = os.path.abspath(file).replace('.mp4','') +"_"+ str(frameId).zfill(8) + "_"+str(framecounter).zfill(8)+".jpg"
+            filename = os.path.abspath(file).replace('.MP4','') +"_"+ str(frameId).zfill(8) + "_"+str(framecounter).zfill(8)+".jpg"
             print (filename)
             cv2.imwrite(filename, image)                            # write frame to image
 
