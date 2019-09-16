@@ -3,8 +3,6 @@ import multiprocessing
 import os
 import shutil 
 
-
-
 from glob import glob
 
 filelist = glob("C:\\csv\\input\\*.csv", recursive=True)
@@ -19,4 +17,3 @@ if __name__ == '__main__':
         p.map(f, filelist)
         
     os.system("pause")    
-        
