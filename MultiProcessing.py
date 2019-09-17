@@ -1,26 +1,19 @@
 from multiprocessing import Pool
 import multiprocessing
 import os
-#import shutil 
 import subprocess
-
 import datetime
-
 from glob2 import glob
-
 import struct 
 
 if (struct.calcsize('P')*8== 64):
     print('64 bit system recognized')
     ffmpegpath = 'C:\\ffmpeg\\ffmpeg64\\bin\\ffmpeg.exe'
-    print(ffmpegpath)
 else: 
     print('64 bit system recognized')
     ffmpegpath = 'C:\\ffmpeg\\ffmpeg32\\bin\\ffmpeg.exe'
-    print(ffmpegpath)
     
 parameters = ' -loglevel panic -an -vcodec copy -y '
-    
 
 filelist = glob('C:\\test\\videos01\\**\\*.mp4', recursive=True)
 
@@ -32,20 +25,7 @@ def convert_and_delete(file):
     subprocess.call(p_string, shell = True)
     os.remove(file) 
 
-#def f(x):
-#    print(x)
-#    cp = shutil.copy(x,os.path.dirname(os.path.dirname(os.path.abspath(x))))
-#    return cp
-
-
-
-
-if __name__ == '__main__':
-    
-
-    
+if __name__ == '__main__':    
     with Pool(multiprocessing.cpu_count()) as p:
-        p.map(convert_and_delete, filelist)
-        
-    os.system("pause")    
-    
+        p.map(convert_and_delete, filelist)        
+    os.system("pause")
